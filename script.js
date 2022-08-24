@@ -4,7 +4,7 @@ const ctx = canvas.getContext("2d");
 //create values for user input paddle
 const paddleHeight = 10;
 const paddleWidth  = 75;
-//paddle starting point on the x axis
+//paddle starting point on the x-axis
 let paddleX = (canvas.width - paddleWidth);
 
 const ballRadius = 10;
@@ -17,6 +17,24 @@ let dy = -2;
 
 let rightPressed = false;
 let leftPressed = false;
+
+const brickRowCount = 3;
+const brickColumnCount = 5;
+const brickWidth = 75;
+const brickHeight = 20;
+const brickPadding = 10;
+const brickOffsetTop = 30;
+const brickOffsetLeft = 30;
+
+const bricks = [];
+
+for (let c = 0; c < brickColumnCount; c++) {
+    bricks[c] = [];
+
+    for (let r = 0; r < brickRowCount; r++) {
+        bricks[c][r] = { x: 0, y: 0};
+    }
+}
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
@@ -37,12 +55,43 @@ function keyUpHandler(e) {
     }
 }
 
+function drawBall() {
+    ctx.beginPath();
+    ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+}
+
+function drawPaddle() {
+    ctx.beginPath();
+    ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+}
+
+function drawBricks() {
+    for(var c=0; c<brickColumnCount; c++) {
+        for(var r=0; r<brickRowCount; r++) {
+            var brickX = (c*(brickWidth+brickPadding))+brickOffsetLeft;
+            var brickY = (r*(brickHeight+brickPadding))+brickOffsetTop;
+            bricks[c][r].x = brickX;
+            bricks[c][r].y = brickY;
+            ctx.beginPath();
+            ctx.rect(brickX, brickY, brickWidth, brickHeight);
+            ctx.fillStyle = "#0095DD";
+            ctx.fill();
+            ctx.closePath();
+        }
+    }
+}
+
 function draw() {
     //clears canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    drawBricks();
     drawBall();
-
     drawPaddle();
 
     if(rightPressed) {
@@ -78,20 +127,6 @@ function draw() {
     y += dy;
 }
 
-function drawBall() {
-    ctx.beginPath();
-    ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-    ctx.fillStyle = "#0095DD";
-    ctx.fill();
-    ctx.closePath();
-}
 
-function drawPaddle() {
-    ctx.beginPath();
-    ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-    ctx.fillStyle = "#0095DD";
-    ctx.fill();
-    ctx.closePath();
-}
 
 const interval = setInterval(draw, 10);
