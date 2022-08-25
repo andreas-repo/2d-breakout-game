@@ -25,7 +25,7 @@ const brickHeight = 20;
 const brickPadding = 10;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
-
+//score keeping variable
 let score = 0;
 
 var bricks = [];
@@ -39,6 +39,7 @@ for (var c = 0; c < brickColumnCount; c++) {
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
 
 function drawScore() {
     ctx.font = "16px Arial";
@@ -59,6 +60,13 @@ function keyUpHandler(e) {
         rightPressed = false;
     } else if (e.key === "Left" || e.key === "ArrowLeft") {
         leftPressed = false;
+    }
+}
+
+function mouseMoveHandler(e) {
+    const relativeX = e.clientX - canvas.offsetLeft;
+    if (relativeX > 0 && relativeX < canvas.width) {
+        paddleX = relativeX - paddleWidth/2;
     }
 }
 
